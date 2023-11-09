@@ -1,4 +1,4 @@
-import { SetStateAction, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
 import axios from "axios";
 import { dfs_xy_conv } from "./ConvertLocation.tsx";
@@ -62,11 +62,9 @@ async function get_weather(x: number, y: number) {
 
 function App() {
   const [currentWeather, setCurrentWeather] = useState(null);
-  const [inputValue, setInputValue] = useState("");
 
-  const fetchWeatherData = async (location: string) => {
-    const locationRes = await get_location(location);
-    console.log(locationRes);
+  const fetchWeatherData = async () => {
+    const locationRes = await get_location("경기도 수원시");
     let x = dfs_xy_conv(
       "toXY",
       locationRes.documents[0].y,
@@ -77,13 +75,13 @@ function App() {
       locationRes.documents[0].y,
       locationRes.documents[0].x
     ).y;
-    console.log(x, y);
-    let weatherRes;
-    if (x && y) {
-      weatherRes = await get_weather(x, y);
-    }
+    const weatherRes = await get_weather(x, y);
     setCurrentWeather(weatherRes);
   };
+
+  useEffect(() => {
+    fetchWeatherData();
+  }, []);
 
   const [currentTemperature, setCurrentTemperature] = useState(null);
   const [currentSky, setCurrentSky] = useState("");
@@ -153,14 +151,6 @@ function App() {
     }
   }, [currentWeather]);
 
-  // input 값이 변경될 때마다 State 값을 업데이트하는 함수를 만듭니다.
-  const handleInputChange = (event: {
-    target: { value: SetStateAction<string> };
-  }) => {
-    const newValue = event.target.value;
-    setInputValue(newValue);
-  };
-
   return (
     <>
       <p>오늘 온도: {currentTemperature}도</p>
@@ -170,12 +160,6 @@ function App() {
       <p>오늘 강수확률: {currentPrecipitationProbability}%</p>
       <p>오늘 강수량: {currentPrecipitationAmount}mm</p>
       <p>오늘 습도: {currentHumidity}%</p>
-      <input type="text" value={inputValue} onChange={handleInputChange} />
-      <br />
-      <br />
-      <button onClick={() => fetchWeatherData(inputValue)}>
-        Console에 State 값 출력
-      </button>
     </>
   );
 }
