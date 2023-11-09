@@ -62,7 +62,7 @@ async function get_weather(x: number, y: number) {
 
 function App() {
   const [currentWeather, setCurrentWeather] = useState(null);
-  const [inputValue, setInputValue] = useState("경기도 안양시 만안구 안양8동");
+  const [inputValue, setInputValue] = useState("");
 
   const fetchWeatherData = async (location: string) => {
     const locationRes = await get_location(location);
@@ -93,11 +93,6 @@ function App() {
   const [currentPrecipitationAmount, setCurrentPrecipitationAmount] =
     useState("");
   const [currentHumidity, setCurrentHumidity] = useState(null);
-  const [wearSuggestion, setWearSuggestion] = useState("");
-
-  useEffect(() => {
-    fetchWeatherData("경기도 안양시 만안구 안양8동");
-  }, []);
 
   useEffect(() => {
     if (currentWeather) {
@@ -158,44 +153,7 @@ function App() {
     }
   }, [currentWeather]);
 
-  useEffect(() => {
-    if (currentTemperature) {
-      if (currentTemperature <= 4) {
-        setWearSuggestion(
-          "패딩, 두꺼운 코트, 누빔, 내복, 목도리, 장갑, 기모, 방한용품"
-        );
-      } else if (currentTemperature >= 5 && currentTemperature <= 8) {
-        setWearSuggestion(
-          "코트, 울 코트, 가죽 재킷, 플리스, 내복, 니트, 레깅스, 청바지, 두꺼운 바지, 스카프, 기모"
-        );
-      } else if (currentTemperature >= 9 && currentTemperature <= 11) {
-        setWearSuggestion(
-          "재킷, 야상, 점퍼, 트렌치 코트, 니트, 청바지, 면바지, 검은색 스타킹, 기모 바지, 레이어드"
-        );
-      } else if (currentTemperature >= 12 && currentTemperature <= 16) {
-        setWearSuggestion(
-          "재킷, 가디건, 청재킷, 야상, 니트, 스웨트 셔츠(맨투맨), 셔츠, 기모 후드티, 청바지, 면바지, 살구색 스타킹"
-        );
-      } else if (currentTemperature >= 17 && currentTemperature <= 19) {
-        setWearSuggestion(
-          "얇은 니트, 얇은 가디건, 얇은 재킷, 후드티, 스웨트 셔츠(맨투맨), 바람막이, 가디건, 긴바지, 청바지, 슬랙스, 스키니진"
-        );
-      } else if (currentTemperature >= 20 && currentTemperature <= 22) {
-        setWearSuggestion(
-          "얇은 가디건, 긴팔 티셔츠, 셔츠, 블라우스, 후드티, 면바지, 슬랙스, 7부 바지, 청바지"
-        );
-      } else if (currentTemperature >= 23 && currentTemperature <= 27) {
-        setWearSuggestion(
-          "반팔 티셔츠, 얇은 셔츠, 얇은 긴팔 티셔츠, 반바지, 면바지"
-        );
-      } else if (currentTemperature >= 28) {
-        setWearSuggestion(
-          "민소매, 반팔 티셔츠, 반바지(핫팬츠), 민소매 원피스, 짧은 치마, 린넨"
-        );
-      }
-    }
-  }, [currentTemperature]);
-
+  // input 값이 변경될 때마다 State 값을 업데이트하는 함수를 만듭니다.
   const handleInputChange = (event: {
     target: { value: SetStateAction<string> };
   }) => {
@@ -212,11 +170,12 @@ function App() {
       <p>오늘 강수확률: {currentPrecipitationProbability}%</p>
       <p>오늘 강수량: {currentPrecipitationAmount}mm</p>
       <p>오늘 습도: {currentHumidity}%</p>
-      <p>옷 추천: {wearSuggestion}</p>
       <input type="text" value={inputValue} onChange={handleInputChange} />
       <br />
       <br />
-      <button onClick={() => fetchWeatherData(inputValue)}>날씨 보기</button>
+      <button onClick={() => fetchWeatherData(inputValue)}>
+        Console에 State 값 출력
+      </button>
     </>
   );
 }
