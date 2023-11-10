@@ -146,7 +146,7 @@ function App() {
 
       // 9: 1시간 강수량(PCP)
       if (currentWeather.response.body.items.item[9].fcstValue === "강수없음") {
-        setCurrentPrecipitationAmount("0");
+        setCurrentPrecipitationAmount("0mm");
       } else {
         setCurrentPrecipitationAmount(
           currentWeather.response.body.items.item[9].fcstValue
@@ -210,7 +210,7 @@ function App() {
         오늘 날씨: {currentSky}, {currentPrecipitationType}
       </p>
       <p>오늘 강수확률: {currentPrecipitationProbability}%</p>
-      <p>오늘 강수량: {currentPrecipitationAmount}mm</p>
+      <p>오늘 강수량: {currentPrecipitationAmount}</p>
       <p>오늘 습도: {currentHumidity}%</p>
       <p>옷 추천: {wearSuggestion}</p>
       <input type="text" value={inputValue} onChange={handleInputChange} />
