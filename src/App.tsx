@@ -1,64 +1,10 @@
 import { SetStateAction, useEffect, useState } from "react";
-import "./App.css";
-import axios from "axios";
+import { AppBar, Container, Grid, Toolbar, Typography } from "@mui/material";
+import CssBaseline from "@mui/material/CssBaseline"; // CssBaseline 추가
+// import "./App.css";
 import { dfs_xy_conv } from "./ConvertLocation.tsx";
-
-async function get_location(address: string) {
-  const url = `https://dapi.kakao.com/v2/local/search/address.json?query=${address}`;
-  const headers = {
-    Authorization: `KakaoAK ${import.meta.env.VITE_KAKAO_API_KEY}`,
-  };
-
-  try {
-    const response = await axios.get(url, { headers });
-
-    if (response.status === 200) {
-      const api_json = response.data;
-      return api_json;
-    } else {
-      console.error("HTTP 오류: " + response.status);
-      return null;
-    }
-  } catch (error) {
-    console.error("네트워크 오류:", error);
-    return null;
-  }
-}
-
-async function get_weather(x: number, y: number) {
-  const currentDate = new Date();
-
-  // 년, 월, 일을 가져오기
-  const year = currentDate.getFullYear();
-  const month = (currentDate.getMonth() + 1).toString().padStart(2, "0"); // 1자리 월 앞에 0을 붙입니다.
-  const day = currentDate.getDate().toString().padStart(2, "0"); // 1자리 일 앞에 0을 붙입니다.
-
-  // 요청할 URL 설정
-  const apiUrl =
-    "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst";
-
-  // 요청 파라미터 설정
-  const params = {
-    ServiceKey: import.meta.env.VITE_KMA_API_KEY,
-    pageNo: 1,
-    numOfRows: 12,
-    base_date: `${year}${month}${day}`,
-    base_time: "0500",
-    nx: x,
-    ny: y,
-    dataType: "JSON",
-  };
-
-  // Axios를 사용하여 GET 요청 보내기
-  try {
-    const response = await axios.get(apiUrl, { params });
-    console.log("응답 데이터:", response.data);
-    return response.data;
-  } catch (error) {
-    console.error("에러 발생:", error);
-    return null;
-  }
-}
+import get_weather from "./GetWeather.tsx";
+import get_location from "./GetLocation.tsx";
 
 function App() {
   const [currentWeather, setCurrentWeather] = useState(null);
@@ -204,19 +150,152 @@ function App() {
   };
 
   return (
+    // <>
+    //   <p>오늘 온도: {currentTemperature}도</p>
+    //   <p>
+    //     오늘 날씨: {currentSky}, {currentPrecipitationType}
+    //   </p>
+    //   <p>오늘 강수확률: {currentPrecipitationProbability}%</p>
+    //   <p>오늘 강수량: {currentPrecipitationAmount}</p>
+    //   <p>오늘 습도: {currentHumidity}%</p>
+    //   <p>옷 추천: {wearSuggestion}</p>
+    //   <input type="text" value={inputValue} onChange={handleInputChange} />
+    //   <br />
+    //   <br />
+    //   <button onClick={() => fetchWeatherData(inputValue)}>날씨 보기</button>
+    // </>
     <>
-      <p>오늘 온도: {currentTemperature}도</p>
-      <p>
-        오늘 날씨: {currentSky}, {currentPrecipitationType}
-      </p>
-      <p>오늘 강수확률: {currentPrecipitationProbability}%</p>
-      <p>오늘 강수량: {currentPrecipitationAmount}</p>
-      <p>오늘 습도: {currentHumidity}%</p>
-      <p>옷 추천: {wearSuggestion}</p>
-      <input type="text" value={inputValue} onChange={handleInputChange} />
-      <br />
-      <br />
-      <button onClick={() => fetchWeatherData(inputValue)}>날씨 보기</button>
+      <CssBaseline /> {/* CssBaseline 추가 */}
+      <Container
+        disableGutters
+        component="main"
+        maxWidth={false}
+        sx={{
+          height: "100vh",
+          backgroundImage: "url(https://source.unsplash.com/random?wallpapers)",
+          backgroundSize: "cover",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <AppBar
+          position="relative"
+          style={{ background: "transparent", boxShadow: "none" }}
+        >
+          <Toolbar>
+            <Typography variant="h6" color="inherit" noWrap>
+              여기에 날짜, 시간 표시
+            </Typography>
+          </Toolbar>
+        </AppBar>
+        <Container
+          sx={{
+            justifyContent: "center", // 수직 가운데 정렬
+            mt: "10vh",
+          }}
+        >
+          <Container
+            sx={{
+              height: "40vh",
+              backgroundColor: "rgba(255, 255, 255, 0.7)", // 흰색 배경에 80%의 투명도
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              borderRadius: "16px", // 모서리 곡률 설정
+              boxShadow: "0px 0px 7.5px 0px rgba(0,0,0,0.25)", // 그림자 추가
+            }}
+          >
+            <Grid container>
+              {/* 좌우 정렬로 왼쪽에 날씨 아이콘, 오른쪽에 텍스트 */}
+              <Grid
+                item
+                sx={{
+                  flexGrow: 1, // flexGrow를 1로 설정하여 가변폭으로 설정
+                  height: "15vh",
+                  width: "15vh",
+                  // backgroundColor: "rgba(255, 255, 255, 0.7)", // 흰색 배경에 80%의 투명도
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  pt: "2rem",
+                }}
+              >
+                <Typography
+                  component="h1"
+                  variant="h2"
+                  // align="center"
+                  color="text.primary"
+                  gutterBottom
+                  sx={{
+                    fontSize: "7rem",
+                  }}
+                >
+                  🌈 {/* 날씨 표시! */}
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Typography
+                  component="h1"
+                  variant="h2"
+                  // align="center"
+                  color="text.primary"
+                  gutterBottom
+                >
+                  여기에 현재 온도, 날씨 표시
+                </Typography>
+                <Typography
+                  variant="h5"
+                  // align="center"
+                  color="text.secondary"
+                  paragraph
+                >
+                  여기에 강수확률, 강수량, 습도 표시
+                </Typography>
+              </Grid>
+            </Grid>
+          </Container>
+        </Container>
+        <Container
+          sx={{
+            justifyContent: "center", // 수직 가운데 정렬
+            mt: "2.5vh",
+          }}
+        >
+          <Container
+            sx={{
+              height: "30vh",
+              backgroundColor: "rgba(255, 255, 255, 0.7)", // 흰색 배경에 80%의 투명도
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              borderRadius: "16px", // 모서리 곡률 설정
+              boxShadow: "0px 0px 7.5px 0px rgba(0,0,0,0.25)", // 그림자 추가
+            }}
+          >
+            <Typography
+              component="h1"
+              variant="h2"
+              align="center"
+              color="text.primary"
+              gutterBottom
+            >
+              좌우 정렬로 왼쪽에는 옷 아이콘, 오른쪽에는 추천 착장
+            </Typography>
+            <Typography
+              variant="h5"
+              align="center"
+              color="text.secondary"
+              paragraph
+            >
+              여기에 귀여운 멘트 입력
+            </Typography>
+          </Container>
+        </Container>
+      </Container>
     </>
   );
 }
