@@ -6,7 +6,17 @@ export default async function get_weather(x: number, y: number) {
   // 년, 월, 일을 가져오기
   const year = currentDate.getFullYear();
   const month = (currentDate.getMonth() + 1).toString().padStart(2, "0"); // 1자리 월 앞에 0을 붙입니다.
-  const day = currentDate.getDate().toString().padStart(2, "0"); // 1자리 일 앞에 0을 붙입니다.
+  let day = "1";
+
+  if (currentDate.getHours.toString() < "5") {
+    if (currentDate.getDate() === 1) {
+      day = "30";
+    } else {
+      day = (currentDate.getDate() - 1).toString().padStart(2, "0"); // 1자리 일 앞에 0을 붙입니다.
+    }
+  } else {
+    day = currentDate.getDate().toString().padStart(2, "0"); // 1자리 일 앞에 0을 붙입니다.
+  }
 
   // 요청할 URL 설정
   const apiUrl =
