@@ -217,6 +217,11 @@ function App() {
     setInputValue(newValue);
   };
 
+  const handleDropdownChange = (event: any) => {
+    setInputValue(event.target.value);
+    fetchWeatherData(inputValue);
+  };
+
   return (
     <>
       <CssBaseline /> {/* CssBaseline 추가 */}
@@ -244,6 +249,41 @@ function App() {
           </Toolbar>
         </AppBar>
         <Box display="flex" justifyContent="space-between">
+          <Container
+            sx={{
+              width: "5rem",
+              borderRadius: "16px", // 모서리 곡률 설정
+              mr: "5rem",
+              mt: "2rem",
+            }}
+          >
+            <select value={inputValue} onChange={handleDropdownChange}>
+              <option value="서울특별시">서울특별시</option>
+              <option value="부산광역시">부산광역시</option>
+              <option value="인천광역시">인천광역시</option>
+              <option value="대구광역시">대구광역시</option>
+              <option value="대전광역시">대전광역시</option>
+              <option value="광주광역시">광주광역시</option>
+              <option value="울산광역시">울산광역시</option>
+              <option value="제주특별자치도">제주특별자치도</option>
+              <option value="수원시">수원시</option>
+              <option value="고양시">고양시</option>
+              <option value="의정부시">의정부시</option>
+              <option value="청주시">청주시</option>
+              <option value="제천시">제천시</option>
+              <option value="천안시">천안시</option>
+              <option value="전주시">전주시</option>
+              <option value="목포시">목포시</option>
+              <option value="순천시">순천시</option>
+              <option value="진주시">진주시</option>
+              <option value="창원시">창원시</option>
+              <option value="포항시">포항시</option>
+              <option value="김천시">김천시</option>
+              <option value="안동시">안동시</option>
+              <option value="춘천시">춘천시</option>
+              <option value="강릉시">강릉시</option>
+            </select>
+          </Container>
           <TextField
             margin="normal"
             label="위치"
@@ -251,7 +291,7 @@ function App() {
               width: "50rem",
               backgroundColor: "rgba(255, 255, 255, 0.9)", // 흰색 배경에 80%의 투명도
               borderRadius: "16px", // 모서리 곡률 설정
-              mr: "5rem",
+              mr: "2rem",
             }}
             value={inputValue}
             onChange={handleInputChange}
